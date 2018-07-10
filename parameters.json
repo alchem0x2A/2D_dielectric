@@ -1,0 +1,74 @@
+{
+  "relax": {
+    "xc": "PBE",
+    "kpts": {
+      "gamma": true,
+      "density": 6.0
+    },
+    "basis": "dzp",
+    "mode": {
+      "ecut": 800.0,
+      "name": "pw"
+    },
+    "occupations": {
+      "width": 0.001,
+      "name": "fermi-dirac"
+    },
+    "poissonsolver": {
+      "dipolelayer": "xy"
+    }
+  },
+
+    "gs": {
+	"xc": "PBE",
+	"kpts": {
+	    "gamma": true,
+	    "density": 10
+	},
+	"basis": "dzp",
+	"mode": {
+	    "ecut": 800,
+	    "name": "pw"
+	},
+	"occupations": {
+	    "width": 0.001,
+	    "name": "fermi-dirac"
+	},
+	"poissonsolver": {
+	    "dipolelayer": "xy"
+	}
+    },
+
+    "es": {
+	"fixdensity": true,
+	"nbands": 60,
+	"kpts": {
+	    "gamma": false,
+	    "density": 20
+	},
+	"convergence": {
+	    "bands": -5
+	},
+	"occupations": {
+	    "width": 0.001,
+	    "name": "fermi-dirac"
+	}
+    },
+
+    "df": {
+	"truncation": "2D",
+	"eta": 0.05,
+        "domega0": 0.005,
+        "intraband": false,
+	"ecut": 50
+    },
+
+    "tetra": {
+	"truncation": "2D",
+	"eta": 0.05,
+	"domega0": 0.005,
+        "integrationmode": "tetrahedron integration",
+        "intraband": false,
+	"ecut": 50
+    }
+}
