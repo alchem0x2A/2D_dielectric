@@ -4,6 +4,7 @@ import json
 from ase.io import read
 import ase.db
 from gpaw import GPAW, PW, FermiDirac
+from ase.parallel import parprint
 
 import time
 import numpy as np
@@ -89,6 +90,10 @@ def relax(atoms, name="",
           smax=2e-4):
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     param_file = os.path.join(curr_dir, "../parameters.json")
+    gpw_file = os.path.join(base_dir, "gs.gpw")
+    if os.path.exists(gpw_file):
+        parprint("Relaxation already done, will use gpw directly!")
+        return 0
     if os.path.exists(param_file):
         params = json.load(open(param_file, "r"))
     else:
@@ -109,8 +114,6 @@ def relax(atoms, name="",
     
     # Calculate the ground state 
     calc.set(**params["gs"])
-    gpw_file = os.path.join(base_dir,
-                            "gs.gpw")
     atoms.get_potential_energy()
     calc.write(gpw_file)
     

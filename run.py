@@ -14,7 +14,7 @@ def main(formula, root="/cluster/scratch/ttian/2D",
     # if rank == 0:
     candidates = get_structure(formula)
     # candidates = broadcast(candidates, root=0)
-    print(rank, candidates)
+    parprint(rank, candidates)
 
     # Directory manipulation
     if rank == 0:
@@ -45,8 +45,8 @@ def main(formula, root="/cluster/scratch/ttian/2D",
         polarizability(base_dir=base_dir, mode="df")
         parprint("Polarizability for {} finished!".format(name))
 
-        polarizability(base_dir=base_dir, mode="tetra")
-        parprint("Polarizability using tetra {} finished!".format(name))
+        # polarizability(base_dir=base_dir, mode="tetra")  # 
+        # parprint("Polarizability using tetra {} finished!".format(name))
     return 0
 
 if __name__ == "__main__":
