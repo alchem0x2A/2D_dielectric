@@ -13,17 +13,30 @@ def extract_to_txt(base_dir):
             alphay = f["alpha_y"]
             alphaz = f["alpha_z"]
             numpy.savetxt(os.path.join(base_dir,
-                                       name.replace("_", "_x_").replace(".npz", ".txt")),
+                                       name.replace("_", "_x_imag_").replace(".npz", ".txt")),
                           X=numpy.vstack([freq, alphax.imag]).T,
                           header="Freq (eV); Imaginary alpha x (AA)")
             numpy.savetxt(os.path.join(base_dir,
-                                       name.replace("_", "_y_").replace(".npz", ".txt")),
+                                       name.replace("_", "_y_imag_").replace(".npz", ".txt")),
                           X=numpy.vstack([freq, alphay.imag]).T,
                           header="Freq (eV); Imaginary alpha y (AA)")
             numpy.savetxt(os.path.join(base_dir,
-                                       name.replace("_", "_z_").replace(".npz", ".txt")),
+                                       name.replace("_", "_z_imag_").replace(".npz", ".txt")),
                           X=numpy.vstack([freq, alphaz.imag]).T,
                           header="Freq (eV); Imaginary alpha z (AA)")
+            
+            numpy.savetxt(os.path.join(base_dir,
+                                       name.replace("_", "_x_real_").replace(".npz", ".txt")),
+                          X=numpy.vstack([freq, alphax.real]).T,
+                          header="Freq (eV); real alpha x (AA)")
+            numpy.savetxt(os.path.join(base_dir,
+                                       name.replace("_", "_y_real_").replace(".npz", ".txt")),
+                          X=numpy.vstack([freq, alphay.real]).T,
+                          header="Freq (eV); real alpha y (AA)")
+            numpy.savetxt(os.path.join(base_dir,
+                                       name.replace("_", "_z_real_").replace(".npz", ".txt")),
+                          X=numpy.vstack([freq, alphaz.real]).T,
+                          header="Freq (eV); Real alpha z (AA)")
             f.close()
 
 
