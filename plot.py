@@ -29,8 +29,8 @@ def plot(name, kind=None):
         alpha_x = f["alpha_x"]
         alpha_z = f["alpha_z"]
         plt.figure()
-        plt.plot(freq, alpha_x.imag, label="xx")
-        plt.plot(freq, alpha_z.imag, label="zz")
+        plt.plot(freq, alpha_x.real, label="xx")
+        plt.plot(freq, alpha_z.real, label="zz")
         plt.xlabel("$\\hbar \\Omega$ (eV)")
         plt.ylabel("$\\alpha$ ($\\AA$)")
         plt.title(directory)

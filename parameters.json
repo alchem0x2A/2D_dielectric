@@ -44,7 +44,7 @@
 	"nbands": 60,
 	"kpts": {
 	    "gamma": false,
-	    "density": 20
+	    "density": 10
 	},
 	"convergence": {
 	    "bands": -5
