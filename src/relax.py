@@ -88,8 +88,17 @@ class QuasiNewton:
 def relax(atoms, name="",
           base_dir="./",
           smax=2e-4):
+    # If pbc in z direction, use vdW for relaxation as default!
+    if atoms.pbc[-1]:           # Do not compare with np.bool_ !
+        use_vdW = True
+    else:
+        use_vdW = False
+
+    # parprint(atoms.pbc[-1], atoms.pbc[-1] is True)
+    
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     param_file = os.path.join(curr_dir, "../parameters.json")
+        
     gpw_file = os.path.join(base_dir, "gs.gpw")
     if os.path.exists(gpw_file):
         parprint("Relaxation already done, will use gpw directly!")
@@ -99,6 +108,14 @@ def relax(atoms, name="",
     else:
         raise FileNotFoundError("no parameter file!")
     
+    # Change xc to vdW
+    if use_vdW:
+        params["relax"]["xc"] = "vdW-DF2"
+        params["relax"].pop("poissonsolver", None)  # Remove the dipole correction since pbc_z=True
+        params["gs"]["xc"] = "vdW-DF2"
+        params["gs"].pop("poissonsolver", None)  # Remove the dipole correction since pbc_z=True
+        
+        
     # calculation asign
     calc = GPAW(**params["relax"])
     atoms.set_calculator(calc)
@@ -109,7 +126,7 @@ def relax(atoms, name="",
     opt = QuasiNewton(atoms,
                       trajectory=traj_filename,
                       logfile=log_filename)
-    mask = [1, 1, 0, 0, 0, 0]   # only relax for xy direction
+    mask = [1, 1, 1, 0, 0, 0]   # Now a full cell relaxation
     opt.run(fmax=0.01, smax=smax, smask=mask)
     
     # Calculate the ground state 

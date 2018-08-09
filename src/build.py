@@ -3,7 +3,7 @@ from ase.atoms import Atoms
 from ase.parallel import parprint, world, broadcast
 import os, os.path
 
-def get_structure(formula, base_dir="./", **filters):
+def get_structure(formula, base_dir="./", c=None, **filters):
     db_file = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                        "../c2db.db")
     # Serial version, only on rank 0
@@ -16,6 +16,11 @@ def get_structure(formula, base_dir="./", **filters):
         pos = mol.positions
         cell = mol.cell
         pbc = mol.pbc
+        # Change distance
+        if (c is not None) and (isinstance(c, (float, int))):
+            cell.setflags(write=True)
+            cell[-1][-1] = c
+            pbc = (True, True, True)  # Use full periodic
         name = "{}-{}".format(symbol,
                               mol.prototype)
             # name = os.path.join(os.path.abspath(base_dir),
@@ -23,6 +28,9 @@ def get_structure(formula, base_dir="./", **filters):
         atoms = Atoms(symbol, positions=pos,
                       cell=cell, pbc=pbc)
         candidates[name] = atoms
+
+        if (c is not None) and (isinstance(c, (float, int))):
+            atoms.center()      # center the atoms, although not really needed
     return candidates
         # atoms.write(name)
 
