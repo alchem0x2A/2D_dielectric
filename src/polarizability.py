@@ -29,7 +29,7 @@ def excited(base_dir="./"):
     calc.diagonalize_full_hamiltonian(nbands=60)
     calc.write(es_gpw, mode="all")  # full matrix
 
-def polarizability(base_dir="./", mode="df"):
+def polarizability(base_dir="./", mode="df", fermi_shift=None):
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     es_gpw = os.path.join(base_dir, "es.gpw")
     param_file = os.path.join(curr_dir, "../parameters.json")
@@ -45,15 +45,20 @@ def polarizability(base_dir="./", mode="df"):
     if mode not in ("df", "tetra"):
         raise ValueError("Mode should be df or tetra")
     
-    data_file = os.path.join(base_dir,
-                             "polarizability_{}.npz".format(mode))
+    if fermi_shift is None:
+        data_file = os.path.join(base_dir,
+                                 "polarizability_{}.npz".format(mode))
+    else:
+        data_file = os.path.join(base_dir,
+                                 "polarizability_{}_{:.2f}.npz".format(mode, fermi_shift))
 
     if os.path.exists(data_file):
         parprint("Polarizability file exists!")
         return 0
     
     df = DielectricFunction(calc=es_gpw,
-                            **params[mode])
+                            **params[mode],
+                            gate_voltage=fermi_shift)  # add energy shift
     alpha0x, alphax = df.get_polarizability(q_c=[0, 0, 0],
                                             direction="x",
                                             pbc=[True, True, False],
