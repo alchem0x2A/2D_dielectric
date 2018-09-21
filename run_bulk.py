@@ -13,7 +13,7 @@ def main(formula, root="/cluster/scratch/ttian/2D-bulk/",
     # candidates = {}
     # if rank == 0:
     # If MX2 then use a larger c
-    if any([s in formula for s in ("S", "Se", "Te")]):
+    if any([s in formula for s in ("I", "O", "S", "Se", "Te")]):
         c = 6.0
     else:
         c = 3.0

@@ -51,6 +51,7 @@ def polarizability(base_dir="./", mode="df", fermi_shift=None):
     else:
         data_file = os.path.join(base_dir,
                                  "polarizability_{}_{:.2f}.npz".format(mode, fermi_shift))
+        params[mode]["intraband"] = True
 
     if os.path.exists(data_file):
         parprint("Polarizability file exists!")
