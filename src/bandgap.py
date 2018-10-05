@@ -18,8 +18,8 @@ from gpaw.spinorbit import get_spinorbit_eigenvalues as get_soc_eigs
 
 def runhse(base_dir):
     hse(base_dir)
-    mpi.world.barrier()
-    hse_spinorbit(base_dir)
+    # mpi.world.barrier()
+    # hse_spinorbit(base_dir)
 
 def get_kpts_size(atoms, density):
     """trying to get a reasonable monkhorst size which hits high
