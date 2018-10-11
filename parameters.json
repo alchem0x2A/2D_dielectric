@@ -1,9 +1,12 @@
 {
   "relax": {
-    "xc": "PBE",
+    "xc": {
+      "name": "C09-vdW",
+      "backend": "libvdwxc"
+    },
     "kpts": {
       "gamma": true,
-      "density": 6.0
+      "density": 4.0
     },
     "basis": "dzp",
     "mode": {
@@ -14,61 +17,52 @@
       "width": 0.001,
       "name": "fermi-dirac"
     },
-    "poissonsolver": {
-      "dipolelayer": "xy"
+    "parallel": {
+      "augment_grids": true
     }
   },
-
-    "gs": {
-	"xc": "PBE",
-	"kpts": {
-	    "gamma": true,
-	    "density": 10
-	},
-	"basis": "dzp",
-	"mode": {
-	    "ecut": 800,
-	    "name": "pw"
-	},
-	"occupations": {
-	    "width": 0.001,
-	    "name": "fermi-dirac"
-	},
-	"poissonsolver": {
-	    "dipolelayer": "xy"
-	}
+  "gs": {
+    "xc": "PBE",
+    "kpts": {
+      "gamma": true,
+      "density": 10
     },
-
-    "es": {
-	"fixdensity": true,
-	"nbands": 60,
-	"kpts": {
-	    "gamma": false,
-	    "density": 10
-	},
-	"convergence": {
-	    "bands": -5
-	},
-	"occupations": {
-	    "width": 0.001,
-	    "name": "fermi-dirac"
-	}
+    "basis": "dzp",
+    "mode": {
+      "ecut": 800,
+      "name": "pw"
     },
-
-    "df": {
-	"truncation": "2D",
-	"eta": 0.05,
-        "domega0": 0.005,
-        "intraband": false,
-	"ecut": 50
-    },
-
-    "tetra": {
-	"truncation": "2D",
-	"eta": 0.05,
-	"domega0": 0.005,
-        "integrationmode": "tetrahedron integration",
-        "intraband": false,
-	"ecut": 50
+    "occupations": {
+      "width": 0.001,
+      "name": "fermi-dirac"
     }
+  },
+  "es": {
+    "fixdensity": true,
+    "nbands": 60,
+    "kpts": {
+      "gamma": false,
+      "density": 10
+    },
+    "convergence": {
+      "bands": -5
+    },
+    "occupations": {
+      "width": 0.001,
+      "name": "fermi-dirac"
+    }
+  },
+  "df": {
+    "eta": 0.05,
+    "domega0": 0.005,
+    "intraband": false,
+    "ecut": 50
+  },
+  "tetra": {
+    "eta": 0.05,
+    "domega0": 0.005,
+    "integrationmode": "tetrahedron integration",
+    "intraband": false,
+    "ecut": 50
+  }
 }

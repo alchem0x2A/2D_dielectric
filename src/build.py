@@ -3,14 +3,17 @@ from ase.atoms import Atoms
 from ase.parallel import parprint, world, broadcast
 import os, os.path
 
-def get_structure(formula, base_dir="./", c=None, **filters):
+def get_structure(formula, prototype, base_dir="./", c=None, **filters):
     db_file = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                        "../c2db.db")
     # Serial version, only on rank 0
     candidates = {}
     # if world.rank == 0:
     db = ase.db.connect(db_file)
-    res = db.select(formula=formula, **filters)
+    res = list(db.select(formula=formula, prototype=prototype))
+    if len(res) > 1:
+        parprint(("Multiple candidates with "
+                  "formula {} and prototype {}!").format(formula, prototype))
     for mol in res:
         symbol = mol.formula
         pos = mol.positions

@@ -8,17 +8,19 @@ from src.dielectric import excited, permittivity
 import shutil
 from ase.parallel import paropen, parprint, world, rank, broadcast
 
-def main(formula, root="/cluster/scratch/ttian/2D-bulk/",
+def main(formula, prototype, root="/cluster/scratch/ttian/2D-bulk/",
          clean=False):
     # candidates = {}
     # if rank == 0:
     # If MX2 then use a larger c
-    if any([s in formula for s in ("I", "O", "S", "Se", "Te")]):
+    if any([s in formula for s in ("I", "O", "S",
+                                   "Se", "Te", "Br",
+                                   "Cl")]):
         c = 6.0
     else:
         c = 3.0
 
-    candidates = get_structure(formula, c=c)
+    candidates = get_structure(formula, prototype, c=c)
     # candidates = broadcast(candidates, root=0)
     parprint(rank, candidates)
 
@@ -57,15 +59,21 @@ def main(formula, root="/cluster/scratch/ttian/2D-bulk/",
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        raise ValueError("Only 1 parameter is needed!")
+        raise ValueError("Not enough parameter!")
     elif len(sys.argv) == 2:
         formula = sys.argv[1]
-        main(formula)
+        prototype = None
+        main(formula, prototype)
     elif len(sys.argv) == 3:
         formula = sys.argv[1]
-        if sys.argv[2] == "clean":
-            main(formula, clean=True)
-        else:
-            main(formula)
+        prototype = sys.argv[2]
+        main(formula, prototype)
+    elif len(sys.argv) == 4:
+        formula = sys.argv[1]
+        prototype = sys.argv[2]
+        clean = sys.argv[3]
+        if clean.lower() != "clean":
+            raise ValueError("I don't understand if you wish to clean or not!?")
+        main(formula, prototype, clean=True)
     else:
         raise ValueError("Parameter ill defined!")
