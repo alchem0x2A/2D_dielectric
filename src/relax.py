@@ -53,14 +53,14 @@ def relax(atoms, name="",
     else:
         raise FileNotFoundError("no parameter file!")
 
-    vdw = None
+    # vdw = None
     # Change xc to vdW
-    if use_vdW:
-        params["relax"].pop("poissonsolver", None)  # Remove the dipole correction since pbc_z=True
-        params["relax"]["xc"] = {"name": "vdW-DF2",
-                                 "backend": "libvdwxc"}
-        params["relax"]["parallel"] = dict(augment_grids=True)
-        params["gs"].pop("poissonsolver", None)  # Remove the dipole correction since pbc_z=True
+    # if use_vdW:
+        # params["relax"].pop("poissonsolver", None)  # Remove the dipole correction since pbc_z=True
+        # params["relax"]["xc"] = {"name": "vdW-DF2",
+                                 # "backend": "libvdwxc"}
+        # params["relax"]["parallel"] = dict(augment_grids=True)
+        # params["gs"].pop("poissonsolver", None)  # Remove the dipole correction since pbc_z=True
         
         
     # calculation asign
@@ -80,7 +80,7 @@ def relax(atoms, name="",
         c0 = 3.3
     else:
         c0 = c0 + 1
-    print(c0)
+       # print(c0)
     n_loops = 30
     c_range = numpy.linspace(0.75 * c0, 1.5 * c0, n_loops)  # run 20 runs
     parprint(c_range)
@@ -98,7 +98,7 @@ def relax(atoms, name="",
     parprint("Best distance: {} with energy {}".format(d, e))
 
     # Calculate the ground state 
-    atoms.celll[-1][-1] = d     # Reduce the cell-c
+    atoms.cell[-1][-1] = d     # Reduce the cell-c
     atoms.set_calculator(calc)  # make sure
     calc.set(**params["gs"])    # Now use PBE only
     
