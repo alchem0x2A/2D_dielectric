@@ -33,11 +33,11 @@ def main(dryrun=True):
     for mol in candidates:
         res = list(new_db.select(unique_id=mol.unique_id))  # exists?
         if len(res) == 0:
-            db_id = new_db.write(mol)
+            db_id = new_db.write(mol.toatoms(), mol.key_value_pairs)
         else:
             db_id = res[0].id
         # Update with default, don't cover
-        new_db.update(db_id, **default_values)
+        new_db.update(db_id, delete_keys=["data"], **default_values)
         params.append((mol.formula, mol.prototype))
         print((mol.formula, mol.prototype))
     print(len(params))
