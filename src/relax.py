@@ -104,7 +104,3 @@ def relax(atoms, name="",
     
     atoms.get_potential_energy()
     calc.write(gpw_file)
-    
-    
-    
-    
