@@ -48,9 +48,9 @@ def update_data(db, db_id, data):
         db.update(db_id,
                   bulk_calculated=True,
                   bulk_L=L,
-                  bulk_epsx=epsx,
-                  bulk_epsy=epsy,
-                  bulk_epsz=epsz)
+                  bulk_eps_x=epsx,
+                  bulk_eps_y=epsy,
+                  bulk_eps_z=epsz)
     except Exception:
         return False
     return True
@@ -94,7 +94,8 @@ def main(db_file="./bulk.db"):
             stats["success"]["count"] += 1
             stats["success"]["names"].append(name)
             # update
-            update_data(db, db_id, res["data"])
+            # print(res["data"])
+            print(update_data(db, db_id, res["data"]))
         else:
             pass                # ???
     
