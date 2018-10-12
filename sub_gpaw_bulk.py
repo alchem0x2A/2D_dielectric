@@ -2,7 +2,7 @@ import os, os.path
 import sys
 from subprocess import run
 import ase.db
-
+from check_status import check
 
 sub_string = ("bsub -n 24 -W 24:00 -R \"rusage[mem=2048]\" "
               "-J \"{0}-{1}\" "
@@ -20,6 +20,7 @@ default_values = dict(bulk_calculated=False,
                       bulk_gap=-1,
                       bulk_gap_hse=-1)
 
+    
 def main(dryrun=True):
     db_file = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                            "./c2db.db")
@@ -29,20 +30,33 @@ def main(dryrun=True):
     db = ase.db.connect(db_file)
     new_db = ase.db.connect(os.path.join("bulk.db"))
     candidates = db.select(selection="gap_gw>0.5")
+    # print(len(list(candidates)))
     params = []
+    not_run = []
     for mol in candidates:
-        res = list(new_db.select(unique_id=mol.unique_id))  # exists?
-        if len(res) == 0:
+        res = list(new_db.select(formula=mol.formula,
+                                 prototype=mol.prototype))  # exists?
+        if len(res) == 0:                                   # has not been run yet
             db_id = new_db.write(mol.toatoms(), mol.key_value_pairs)
         else:
             db_id = res[0].id
         # Update with default, don't cover
-        new_db.update(db_id, delete_keys=["data"], **default_values)
+        new_db.update(db_id, delete_keys=["data"])
+        # Key for bulk not stored yet, otherwise do nothing
+        if any(key not in new_db.get(db_id).key_value_pairs \
+               for key in default_values):
+            new_db.update(db_id, **default_values)
+        res = check(mol.formula, mol.prototype, data=False)
+        if res["step"] is None:
+            not_run.append((mol.formula, mol.prototype))
+
+        # All data
         params.append((mol.formula, mol.prototype))
         print((mol.formula, mol.prototype))
+    
     print(len(params))
     if dryrun is not True:
-        for n, p in params:
+        for n, p in not_run:
             sub_job(n, p)
         return True
     else:

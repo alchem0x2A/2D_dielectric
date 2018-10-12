@@ -6,7 +6,9 @@ from gpaw import GPAW
 
 # Check which step for calculation
 def check(name, proto,
-          root_dir = "/cluster/scratch/ttian/2D-bulk"):
+          root_dir = "/cluster/scratch/ttian/2D-bulk",
+          data=True):
+    print(name, proto)
     base_dir = os.path.join(root_dir, "{}-{}".format(name, proto))
     gs_file = os.path.join(base_dir, "gs.gpw")
     es_file = os.path.join(base_dir, "es.gpw")
@@ -22,13 +24,20 @@ def check(name, proto,
         res["step"] = "eps"
     else:
         res["step"] = "full"
-        f = numpy.load(eps_file)
-        epsx = f["eps_x"][0].real
-        epsy = f["eps_y"][0].real
-        epsz = f["eps_z"][0].real
-        calc = GPAW(gs_file)
-        L = calc.get_atoms().cell[-1][-1]
-        res["data"] = (epsx, epsy, epsz, L)
+        if data is True:
+            f = numpy.load(eps_file)
+            if "L" not in f:
+                calc = GPAW(gs_file)
+                L = calc.get_atoms().cell[-1][-1]
+                numpy.savez(eps_file, **{k:v for k, v in f.items()},
+                            L=L)
+            else:
+                L = float(f["L"])  # original format is scalar
+            epsx = f["eps_x"][0].real
+            epsy = f["eps_y"][0].real
+            epsz = f["eps_z"][0].real
+
+            res["data"] = (epsx, epsy, epsz, L)
     return res
 
 
