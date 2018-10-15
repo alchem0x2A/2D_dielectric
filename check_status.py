@@ -8,7 +8,7 @@ from gpaw import GPAW
 def check(name, proto,
           root_dir = "/cluster/scratch/ttian/2D-bulk",
           data=True):
-    print(name, proto)
+    # print(name, proto)
     base_dir = os.path.join(root_dir, "{}-{}".format(name, proto))
     gs_file = os.path.join(base_dir, "gs.gpw")
     es_file = os.path.join(base_dir, "es.gpw")
@@ -101,6 +101,7 @@ def main(db_file="./bulk.db"):
     
     for key in ("not started", "failed", "gs", "es", "success"):
         print("{0}, Counts: {1}".format(key, stats[key]["count"]))
+    print(stats["failed"]["names"])
     return    
 
 if __name__ == "__main__":
