@@ -4,7 +4,7 @@ from subprocess import run
 import ase.db
 from check_status import check
 
-sub_string = ("bsub -n 24 -W 48:00 -R \"rusage[mem=2048]\" "
+sub_string = ("bsub -n 24 -W 48:00 -R \"rusage[mem=4096]\" "
               "-J \"{0}-{1}\" "
               "-o {0}-{1}-%J "
               "\"mpirun gpaw-python run_bulk.py {0} {1}\"")
