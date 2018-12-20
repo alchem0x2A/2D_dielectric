@@ -23,7 +23,7 @@ def excited(base_dir="./"):
     else:
         raise FileNotFoundError("no parameter file!")
 
-    calc = GPAW(gs_gpw)
+    calc = GPAW(gs_gpw, parallel=dict(kpt=1))
     calc.set(**params["es"])
     calc.get_potential_energy()
     calc.diagonalize_full_hamiltonian(nbands=60)
