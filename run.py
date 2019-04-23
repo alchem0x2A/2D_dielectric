@@ -8,11 +8,12 @@ from src.polarizability import excited, polarizability
 import shutil
 from ase.parallel import paropen, parprint, world, rank, broadcast
 
-def main(formula, root="/cluster/scratch/ttian/2D",
+def main(formula, prototype=None,
+         root="/cluster/scratch/ttian/2D",
          clean=False):
     # candidates = {}
     # if rank == 0:
-    candidates = get_structure(formula)
+    candidates = get_structure(formula, prototype)
     # candidates = broadcast(candidates, root=0)
     parprint(rank, candidates)
 
@@ -33,6 +34,7 @@ def main(formula, root="/cluster/scratch/ttian/2D",
     # On all ranks
     for name in candidates:
         base_dir = os.path.join(root, name)
+        parprint(name)
         mol = candidates[name]
         # Relaxation and gs
         relax(mol, name=name,
@@ -60,6 +62,7 @@ if __name__ == "__main__":
         if sys.argv[2] == "clean":
             main(formula, clean=True)
         else:
-            main(formula)
+            prototype = sys.argv[2]
+            main(formula, prototype)
     else:
         raise ValueError("Parameter ill defined!")
